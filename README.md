@@ -1,69 +1,71 @@
-# Audit Merged Pull Requests Without Approved Reviews
+Certainly! Below is the updated README in markdown format:
 
-This script audits merged pull requests in a given GitHub repository or all repositories of a given organization to identify any that were merged without approved reviews. It leverages the GitHub API to fetch the list of merged pull requests and their associated reviews.
+---
+
+# Audit Merged PRs Without Approved Reviews
+
+This script checks for merged pull requests without approved reviews in a GitHub repository or across all repositories of a GitHub organization.
 
 ## Requirements
 
-- Python 3
-- A GitHub personal access token
+- Python 3.6 or higher
+- `requests` package
+- `termcolor` package
 
 ## Installation
 
-1. Clone the repository and navigate to its directory.
+1. Clone the repository:
 
-    ```sh
-    git clone https://github.com/radioactivetobi/pr_auditor.git
-    cd pr_auditor
-    ```
+```
+git clone https://github.com/radioactivetobi/pr_auditor.git
+cd pr_auditor
+```
 
-2. Install the required Python packages.
+2. Install the required packages:
 
-    ```sh
-    pip install -r requirements.txt
-    ```
+```
+pip install -r requirements.txt
+```
 
 ## Usage
 
-The script can be run from the command line with the following arguments:
+You can run the script using the following command:
 
-- `-r`, `--repo_name`: The name of the repository in the format `owner/repo`.
-- `-o`, `--organization`: The name of the organization.
-- `-p`, `--token`: Your personal access token (required).
-- `-s`, `--start_date`: The start date in the format `YYYY-MM-DD` (required).
+```
+python script.py -p YOUR_TOKEN -s START_DATE [-r REPO_NAME | -o ORGANIZATION] [-f FILE]
+```
 
-Either `repo_name` or `organization` must be provided.
+- `YOUR_TOKEN`: Your personal access token. Required.
+- `START_DATE`: The start date in the format `YYYY-MM-DD`. Required.
+- `REPO_NAME`: The name of the repository in the format `owner/repo`. Optional. Either `REPO_NAME` or `ORGANIZATION` must be provided.
+- `ORGANIZATION`: The name of the organization. Optional. Either `REPO_NAME` or `ORGANIZATION` must be provided.
+- `FILE`: The name of the CSV file to save the output. Optional. Default is `output.csv`.
 
-### Example
+For example:
 
-To audit a single repository:
-
-```sh
+```
 python script.py -r owner/repo -p your-token -s 2022-01-01
 ```
 
-To audit all repositories of an organization:
+or
 
-```sh
-python script.py -o organization -p your-token -s 2022-01-01
+```
+python script.py -o organization -p your-token -s 2022-01-01 -f output.csv
 ```
 
 ## Output
 
-The script will print the merged pull requests without approved reviews for each audited repository. For each pull request, it will print:
+The script will save the merged pull requests without approved reviews to a CSV file with the following columns:
 
-- The pull request number and title.
-- The date the pull request was created.
-- The date the pull request was merged.
-- The link to the pull request on GitHub.
-- The username of the user who created the pull request.
-- The usernames of the reviewers who reviewed the pull request. If there are no reviewers, it will print 'None'.
-
-## Note
-
-The script uses the `requests` library to make HTTP requests to the GitHub API. It uses a personal access token for authentication. Make sure to generate a personal access token with the appropriate scopes (`repo` and `read:org`) and pass it as an argument when running the script.
+- `Repository`: The name of the repository.
+- `PR Number`: The number of the pull request.
+- `Title`: The title of the pull request.
+- `Sent Date`: The date when the pull request was created.
+- `Merge Date`: The date when the pull request was merged.
+- `Link`: The link to the pull request.
+- `From`: The user who created the pull request.
+- `Reviewers`: The users who reviewed the pull request.
 
 ## License
 
 [MIT](LICENSE)
-
----
