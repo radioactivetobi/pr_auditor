@@ -37,6 +37,7 @@ def get_merged_prs_without_approved_reviews(repo_name, token, start_date):
 
                 # If there are no approved reviews, add the pull request to the list
                 if not approved_reviews:
+                    pr['reviews'] = reviews
                     merged_prs_without_approved_reviews.append(pr)
 
         return merged_prs_without_approved_reviews
@@ -81,7 +82,13 @@ def main():
             print(f'\nRepository: {repo_name}')
             print('Merged Pull Requests without approved reviews:')
             for pr in merged_prs_without_approved_reviews:
-                print(f"#{pr['number']} - {pr['title']}")
+                print(f"\n#{pr['number']} - {pr['title']}")
+                print(f"Pull request sent date: {pr['created_at']}")
+                print(f"Pull request merge date: {pr['merged_at']}")
+                print(f"Pull request link: {pr['html_url']}")
+                print(f"Pull request from: {pr['user']['login']}")
+                reviewers = [r['user']['login'] for r in pr['reviews']]
+                print(f"Pull request reviewers: {', '.join(reviewers) if reviewers else 'None'}")
     elif args.organization:
         organization = args.organization
         repositories = get_repositories(organization, token)
@@ -94,7 +101,13 @@ def main():
                     print(f'\nRepository: {repo_name}')
                     print('Merged Pull Requests without approved reviews:')
                     for pr in merged_prs_without_approved_reviews:
-                        print(f"#{pr['number']} - {pr['title']}")
+                        print(f"\n#{pr['number']} - {pr['title']}")
+                        print(f"Pull request sent date: {pr['created_at']}")
+                        print(f"Pull request merge date: {pr['merged_at']}")
+                        print(f"Pull request link: {pr['html_url']}")
+                        print(f"Pull request from: {pr['user']['login']}")
+                        reviewers = [r['user']['login'] for r in pr['reviews']]
+                        print(f"Pull request reviewers: {', '.join(reviewers) if reviewers else 'None'}")
     else:
         print('Either repository name or organization name must be provided.')
 
