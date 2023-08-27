@@ -62,6 +62,11 @@ The script will save the merged pull requests without approved reviews to a CSV 
 - `From`: The user who created the pull request.
 - `Reviewers`: The users who reviewed the pull request.
 
+## Documentation
+
+For more detailed technical documentation, please refer to the [DOCUMENTATION.md](https://github.com/radioactivetobi/pr_auditor/blob/main/DOCUMENTATION.md) file.
+
 ## License
 
 [MIT](LICENSE)
+
