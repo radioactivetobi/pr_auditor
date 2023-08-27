@@ -44,25 +44,56 @@ def get_merged_prs_without_approved_reviews(repo_name, token):
         print(f'Error: {e}')
         return None
 
+def get_repositories(organization, token):
+    url = f'https://api.github.com/orgs/{organization}/repos'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Accept': 'application/vnd.github.v3+json',
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        repos = response.json()
+        return [repo['full_name'] for repo in repos]
+    except requests.exceptions.RequestException as e:
+        print(f'Error: {e}')
+        return None
+
 def main():
     parser = argparse.ArgumentParser(description='Audit merged PRs without approved reviews.')
-    parser.add_argument('-r', '--repo_name', required=True, type=str, help='The name of the repository (format: owner/repo)')
+    parser.add_argument('-r', '--repo_name', type=str, help='The name of the repository (format: owner/repo)')
+    parser.add_argument('-o', '--organization', type=str, help='The name of the organization')
     parser.add_argument('-p', '--token', required=True, type=str, help='Your personal access token')
     
     args = parser.parse_args()
     
-    repo_name = args.repo_name
     token = args.token
     
-    merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token)
-
-    if merged_prs_without_approved_reviews is not None:
-        if merged_prs_without_approved_reviews:
-            print('\nMerged Pull Requests without approved reviews:')
+    if args.repo_name:
+        repo_name = args.repo_name
+        merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token)
+        
+        if merged_prs_without_approved_reviews is not None and merged_prs_without_approved_reviews:
+            print(f'\nRepository: {repo_name}')
+            print('Merged Pull Requests without approved reviews:')
             for pr in merged_prs_without_approved_reviews:
                 print(f"#{pr['number']} - {pr['title']}")
-        else:
-            print('\nAll merged pull requests have approved reviews.')
+    elif args.organization:
+        organization = args.organization
+        repositories = get_repositories(organization, token)
+        
+        if repositories is not None:
+            for repo_name in repositories:
+                merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token)
+                
+                if merged_prs_without_approved_reviews is not None and merged_prs_without_approved_reviews:
+                    print(f'\nRepository: {repo_name}')
+                    print('Merged Pull Requests without approved reviews:')
+                    for pr in merged_prs_without_approved_reviews:
+                        print(f"#{pr['number']} - {pr['title']}")
+    else:
+        print('Either repository name or organization name must be provided.')
 
 if __name__ == '__main__':
     main()
