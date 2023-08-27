@@ -28,7 +28,7 @@ pip install -r requirements.txt
 You can run the script using the following command:
 
 ```
-python script.py -p YOUR_TOKEN -s START_DATE [-r REPO_NAME | -o ORGANIZATION] [-f FILE]
+python pr_audit.py -p YOUR_TOKEN -s START_DATE [-r REPO_NAME | -o ORGANIZATION] [-f FILE]
 ```
 
 - `YOUR_TOKEN`: Your personal access token. Required.
@@ -40,13 +40,13 @@ python script.py -p YOUR_TOKEN -s START_DATE [-r REPO_NAME | -o ORGANIZATION] [-
 For example:
 
 ```
-python script.py -r owner/repo -p your-token -s 2022-01-01
+python pr_audit.py -r owner/repo -p your-token -s 2022-01-01
 ```
 
 or
 
 ```
-python script.py -o organization -p your-token -s 2022-01-01 -f output.csv
+python pr_audit.py -o organization -p your-token -s 2022-01-01 -f output.csv
 ```
 
 ## Output
