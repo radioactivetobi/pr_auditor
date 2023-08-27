@@ -1,7 +1,8 @@
 import requests
 import argparse
+from datetime import datetime
 
-def get_merged_prs_without_approved_reviews(repo_name, token):
+def get_merged_prs_without_approved_reviews(repo_name, token, start_date):
     url = f'https://api.github.com/repos/{repo_name}/pulls'
     headers = {
         'Authorization': f'Bearer {token}',
@@ -23,7 +24,7 @@ def get_merged_prs_without_approved_reviews(repo_name, token):
         # Iterate through each pull request
         for pr in pulls:
             # Check if the pull request was merged
-            if pr['merged_at']:
+            if pr['merged_at'] and datetime.fromisoformat(pr['merged_at'][:-1]) >= start_date:
                 # Construct the URL for the reviews of the pull request
                 reviews_url = f"https://api.github.com/repos/{repo_name}/pulls/{pr['number']}/reviews"
                 # Get the reviews of the pull request
@@ -65,14 +66,16 @@ def main():
     parser.add_argument('-r', '--repo_name', type=str, help='The name of the repository (format: owner/repo)')
     parser.add_argument('-o', '--organization', type=str, help='The name of the organization')
     parser.add_argument('-p', '--token', required=True, type=str, help='Your personal access token')
+    parser.add_argument('-s', '--start_date', required=True, type=str, help='The start date (format: YYYY-MM-DD)')
     
     args = parser.parse_args()
     
     token = args.token
+    start_date = datetime.fromisoformat(args.start_date)
     
     if args.repo_name:
         repo_name = args.repo_name
-        merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token)
+        merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token, start_date)
         
         if merged_prs_without_approved_reviews is not None and merged_prs_without_approved_reviews:
             print(f'\nRepository: {repo_name}')
@@ -85,7 +88,7 @@ def main():
         
         if repositories is not None:
             for repo_name in repositories:
-                merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token)
+                merged_prs_without_approved_reviews = get_merged_prs_without_approved_reviews(repo_name, token, start_date)
                 
                 if merged_prs_without_approved_reviews is not None and merged_prs_without_approved_reviews:
                     print(f'\nRepository: {repo_name}')
