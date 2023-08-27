@@ -67,5 +67,3 @@ The script uses the `requests` library to make HTTP requests to the GitHub API. 
 [MIT](LICENSE)
 
 ---
-
-Make sure to adjust the README according to your needs, e.g., the repository URL, the installation steps, etc.
