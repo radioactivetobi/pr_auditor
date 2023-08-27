@@ -1,7 +1,3 @@
-Certainly! Below is the updated README in markdown format:
-
----
-
 # Audit Merged PRs Without Approved Reviews
 
 This script checks for merged pull requests without approved reviews in a GitHub repository or across all repositories of a GitHub organization.
